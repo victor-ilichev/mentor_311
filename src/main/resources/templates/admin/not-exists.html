@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cars</title>
+    <style>
+        article > table {
+            border: 1px solid gray;
+            border-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <h4 th:text="${'User with id: ' + id + ' does not exists.'}">v</h4>
+    </article>
+</body>
+</html>
