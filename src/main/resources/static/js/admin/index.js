@@ -91,19 +91,7 @@ $(document).ready(function(){
         $form = null;
     });
 
-    // $('#nav-tab a#nav-home-tab').on('click', function (event) {
-    //     event.preventDefault()
-    //     // $(this).tab('show')
-    //     getHtmlFrom('/api/v1/users/list')
-    //         .then(response => {
-    //             $usersTableContainer.html($(response));
-    //         });
-    // })
-    // show.bs.tab
-
     $('#nav-tab a#nav-home-tab').on('show.bs.tab', function (event) {
-        // event.preventDefault()
-        // $(this).tab('show')
         freshUsers();
     });
 
@@ -123,7 +111,6 @@ $(document).ready(function(){
                         },
                         body: $response.serialize()
                     }).then(result => {
-                        //console.log(result);
                         if (result.status === 200) {
                             $('#nav-home-tab').tab('show');
                         }
@@ -157,29 +144,4 @@ async function getHtmlFrom(url) {
     } else {
         alert("Ошибка HTTP: " + response.status);
     }
-}
-
-function getFormData($form){
-    // var formData  = new FormData();
-
-    // for(const name in data) {
-    //     formData.append(name, data[name]);
-    // }
-    var unindexed_array = $form.serializeArray();
-    var indexed_array = {};
-    // formData.append('foo', 'bar');
-
-    $.map(unindexed_array, function(n, i){
-        indexed_array[n['name']] = n['value'];
-        // console.log(n['name'], n['value']);
-        // formData.append(n['name'], n['value']);
-    });
-
-    // for(const name in unindexed_array) {
-    //     formData.append(name, unindexed_array[name]);
-    // }
-
-    console.log(indexed_array);
-    // console.log(Array.from(formData));
-    return indexed_array;
 }

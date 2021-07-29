@@ -24,12 +24,7 @@ public class UsersApiController {
 
     @GetMapping("/list")
     public String list(Model model) {
-//        User user = new User();
-//
         model.addAttribute("users", userService.findAll());
-//        model.addAttribute("new_user", user);
-//        model.addAttribute("roles", roleRepository.findAll());
-//        model.addAttribute("currentPage", "admin_index");
 
         return "api/users/list";
     }
@@ -37,11 +32,8 @@ public class UsersApiController {
     @GetMapping("/new-user-form")
     public String userForm(Model model) {
         User user = new User();
-//
-//        model.addAttribute("users", userService.findAll());
         model.addAttribute("user", user);
         model.addAttribute("roles", roleRepository.findAll());
-//        model.addAttribute("currentPage", "admin_index");
 
         return "api/users/new-form";
     }

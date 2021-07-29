@@ -42,11 +42,6 @@ public class AdminController {
 
     @GetMapping("/index")
     public String index(Model model) {
-//        User user = new User();
-//
-//        model.addAttribute("users", userService.findAll());
-//        model.addAttribute("new_user", user);
-//        model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("currentPage", "admin_index");
 
         return "admin/index";
