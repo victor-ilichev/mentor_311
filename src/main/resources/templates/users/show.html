@@ -1,18 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main}">
 <head>
     <meta charset="UTF-8">
-    <title>Show</title>
+    <title>Cars</title>
 </head>
 <body>
-    <p th:text="${user.getFirstName() + ', ' + user.getLastName()}">VALUE</p>
-    <p th:text="${'Email: ' + user.getEmail()}">VALUE</p>
-    <p th:text="${user.getId()}">VALUE</p>
-    <p>
-<!--        <a th:href="@{/users/logout}">Logout</a>-->
-        <form th:method="POST" th:action="@{/users/logout}">
-            <input type="submit" value="Logout"/>
-        </form>
-    </p>
+    <div class="col" layout:fragment="content">
+        <h2 class="my-3">User information-page</h2>
+        <div class="border">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">About user</h4>
+            </div>
+            <div class="p-4">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${user.getId()}"></td>
+                        <td th:text="${user.getFirstName()}"></td>
+                        <td th:text="${user.getLastName()}"></td>
+                        <td th:text="${user.getAge()}"></td>
+                        <td th:text="${user.getEmail()}"></td>
+                        <td th:text="${user.getRoles().isEmpty() ? '' : user.getRoles().iterator().next().getName()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,12 @@
+#confirmModal .modal-body form {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#nav-create .new-user-container {
+    margin: 30px auto;
+}
+
+.btn-dark-text {
+    color: #b9b9b9;
+}

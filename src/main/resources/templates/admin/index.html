@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main}">
 <head>
     <meta charset="UTF-8">
     <title>Cars</title>
@@ -10,36 +11,128 @@
             border-spacing: 10px;
         }
     </style>
+    <link th:href="@{/css/admin/index.css}" rel="stylesheet" media="screen" />
 </head>
 <body>
-    <article>
-        <h4>Cars list</h4>
-        <p>
-            <a href="/admin/new">Create one</a>
-        </p>
-        <table>
-            <thead>
-                <tr>
-                    <td>Title</td>
-                    <td>Color</td>
-                    <td>Year</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="user: ${users}">
-                    <td th:text="${user.getId()}"></td>
-                    <td th:text="${user.getFirstName()}" />
-                    <td th:text="${user.getLastName()}" />
-                    <td><a th:href="@{/admin/{id}(id=${user.getId()})}">Show</a></td>
-                    <td><a th:href="@{/admin/{id}/edit(id=${user.getId()})}">Edit</a></td>
-                    <td>
-                        <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
-                            <input type="submit" value="Delete"/>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </article>
+
+<div class="col" layout:fragment="content">
+    <h2 class="my-3">Admin panel</h2>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Users table</a>
+            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-create" role="tab" aria-controls="nav-create" aria-selected="false">New User</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="border">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">All Users</h4>
+                </div>
+                <div class="p-4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user: ${users}" th:attr="data-id=${user.getId()}">
+                                <td th:text="${user.getId()}"></td>
+                                <td th:text="${user.getFirstName()}"></td>
+                                <td th:text="${user.getLastName()}"></td>
+                                <td th:text="${user.getAge()}"></td>
+                                <td th:text="${user.getEmail()}"></td>
+                                <td th:text="${user.getRoles().isEmpty() ? '' : user.getRoles().iterator().next().getName()}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-type="edit" data-target="#confirmModal">Edit</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-type="delete" data-target="#confirmModal">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-create" role="tabpanel" aria-labelledby="nav-create-tab">
+            <div class="border">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">New User</h4>
+                </div>
+                <div class="col-md-3 new-user-container">
+                    <form th:method="POST" th:action="@{/admin}" th:object="${new_user}" class="text-center">
+                        <div class="form-group">
+                            <label for="firstName">Enter firstName: </label>
+                            <input class="form-control" type="text" th:field="*{firstName}" id="firstName"/>
+                            <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">FirstName Error</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Enter lastName: </label>
+                            <input class="form-control" type="text" th:field="*{lastName}" id="lastName"/>
+                            <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName Error</div>
+                        </div>
+                        <div class="form-group text-center">
+                            <label for="age">Age: </label>
+                            <input class="form-control" type="text" th:field="*{age}" id="age"/>
+                            <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Enter email: </label>
+                            <input class="form-control" type="text" th:field="*{email}" id="email"/>
+                            <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Enter password: </label>
+                            <input class="form-control" type="text" th:field="*{password}" id="password"/>
+                            <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+                        </div>
+                        <div class="form-group text-center">
+                            <label for="role" id="role">Role: </label>
+                            <select name="roles" class="custom-select" size="3">
+                                <!--                selected-->
+                                <option th:each="role: ${roles}"
+                                        th:attr="value=${role.getId()}"
+                                        th:text="${role.getName()}">Value</option>
+                            </select>
+                            <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{role}">Role Error</div>
+                        </div>
+                        <input type="submit" class="btn btn-success" value="Add new user"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancel" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary confirm">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/admin/index.js}"></script>
+</th:block>
 </body>
 </html>

@@ -1,9 +1,9 @@
 package com.example.crud.controller;
 
 import com.example.crud.model.User;
+import com.example.crud.service.RoleRepository;
 import com.example.crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,10 +19,12 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @RequestMapping(value={"/", ""}, method={RequestMethod.GET})
@@ -38,7 +40,12 @@ public class AdminController {
 
     @GetMapping("/index")
     public String index(Model model) {
+        User user = new User();
+
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("new_user", user);
+        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("currentPage", "admin_index");
 
         return "admin/index";
     }
@@ -80,14 +87,21 @@ public class AdminController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") long id) {
+    public String edit(Model model, @PathVariable("id") long id, @RequestParam(required = false) boolean disabled) {
         User user = userService.findById(id).orElse(null);
 
         if (null == user) {
-            return "redirect:/admin/" + id + "/not-exists";
+            model.addAttribute("id", id);
+
+            return "admin/not-exists";
         }
 
         model.addAttribute("user", user);
+        model.addAttribute("roles", roleRepository.findAll());
+
+        if (disabled) {
+            return "admin/disabled_form";
+        }
 
         return "admin/edit";
     }
@@ -107,7 +121,7 @@ public class AdminController {
 
         userService.save(user);
 
-        return "redirect:/admin";
+        return "redirect:/admin/index";
     }
 
     @DeleteMapping("/{id}")

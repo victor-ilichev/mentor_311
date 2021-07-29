@@ -42,6 +42,7 @@ public class UsersController {
 
         if (null != user) {
             model.addAttribute("user", user);
+            model.addAttribute("currentPage", "user_index");
 
             return "users/show";
         }

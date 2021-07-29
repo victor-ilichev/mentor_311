@@ -1,5 +1,7 @@
 package com.example.crud.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -39,6 +41,7 @@ public class Role implements GrantedAuthority {
         this.name = firstName;
     }
 
+    @JsonBackReference
     public Set<User> getUsers() {
         return users;
     }

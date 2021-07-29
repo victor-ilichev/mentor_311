@@ -1,8 +1,11 @@
 package com.example.crud.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -20,6 +23,10 @@ public class User {
     @Column(name = "last_name")
     @NotEmpty(message = "lastname should not be empty")
     private String lastName;
+
+    @Column(name = "age")
+    @NotNull(message = "age should not be empty")
+    private int age;
 
     @Column(name = "email")
     @Email(message = "Bad email")
@@ -69,6 +76,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -85,6 +100,7 @@ public class User {
         this.password = password;
     }
 
+    @JsonManagedReference
     public Set<Role> getRoles() {
         return roles;
     }

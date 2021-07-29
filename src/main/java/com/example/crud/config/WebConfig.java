@@ -10,16 +10,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 @Configuration
-@EnableWebMvc
 @EnableTransactionManagement
 public class WebConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
@@ -62,8 +60,18 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasAnyRole('ADMIN')")
                 //страницы аутентификаци доступна всем
                 .antMatchers("/users/login").anonymous()
+                .antMatchers("/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated();
+
+//        http
+//                .no
+//                .authorizeRequests().antMatchers("/css/**", "/js/**", "/images/**").permitAll();
     }
+
+//    @Override
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("/static/**");
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -86,6 +94,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        // для работы DELETE PATCH методов ф ормах html
         return new HiddenHttpMethodFilter();
+    }
+
+    @Bean
+    public SpringSecurityDialect springSecurityDialect(){
+        // для работы секъюрности в темплэйтах
+        return new SpringSecurityDialect();
     }
 }
