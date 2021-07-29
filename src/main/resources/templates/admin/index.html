@@ -20,7 +20,7 @@
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Users table</a>
-            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-create" role="tab" aria-controls="nav-create" aria-selected="false">New User</a>
+            <a class="nav-item nav-link" id="nav-new-user-tab" data-toggle="tab" href="#nav-create" role="tab" aria-controls="nav-create" aria-selected="false">New User</a>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -29,38 +29,7 @@
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">All Users</h4>
                 </div>
-                <div class="p-4">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Age</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="user: ${users}" th:attr="data-id=${user.getId()}">
-                                <td th:text="${user.getId()}"></td>
-                                <td th:text="${user.getFirstName()}"></td>
-                                <td th:text="${user.getLastName()}"></td>
-                                <td th:text="${user.getAge()}"></td>
-                                <td th:text="${user.getEmail()}"></td>
-                                <td th:text="${user.getRoles().isEmpty() ? '' : user.getRoles().iterator().next().getName()}"></td>
-                                <td>
-                                    <button type="button" class="btn btn-info" data-toggle="modal" data-type="edit" data-target="#confirmModal">Edit</button>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-type="delete" data-target="#confirmModal">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="p-4" id="js-users-table-container"></div>
             </div>
         </div>
         <div class="tab-pane fade" id="nav-create" role="tabpanel" aria-labelledby="nav-create-tab">
@@ -68,46 +37,7 @@
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">New User</h4>
                 </div>
-                <div class="col-md-3 new-user-container">
-                    <form th:method="POST" th:action="@{/admin}" th:object="${new_user}" class="text-center">
-                        <div class="form-group">
-                            <label for="firstName">Enter firstName: </label>
-                            <input class="form-control" type="text" th:field="*{firstName}" id="firstName"/>
-                            <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">FirstName Error</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Enter lastName: </label>
-                            <input class="form-control" type="text" th:field="*{lastName}" id="lastName"/>
-                            <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName Error</div>
-                        </div>
-                        <div class="form-group text-center">
-                            <label for="age">Age: </label>
-                            <input class="form-control" type="text" th:field="*{age}" id="age"/>
-                            <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Enter email: </label>
-                            <input class="form-control" type="text" th:field="*{email}" id="email"/>
-                            <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Enter password: </label>
-                            <input class="form-control" type="text" th:field="*{password}" id="password"/>
-                            <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
-                        </div>
-                        <div class="form-group text-center">
-                            <label for="role" id="role">Role: </label>
-                            <select name="roles" class="custom-select" size="3">
-                                <!--                selected-->
-                                <option th:each="role: ${roles}"
-                                        th:attr="value=${role.getId()}"
-                                        th:text="${role.getName()}">Value</option>
-                            </select>
-                            <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{role}">Role Error</div>
-                        </div>
-                        <input type="submit" class="btn btn-success" value="Add new user"/>
-                    </form>
-                </div>
+                <div class="col-md-3" id="js-new-user-container"></div>
             </div>
         </div>
     </div>

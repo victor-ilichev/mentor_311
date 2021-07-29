@@ -3,7 +3,7 @@
     font-weight: bold;
 }
 
-#nav-create .new-user-container {
+#nav-create #js-new-user-container {
     margin: 30px auto;
 }
 

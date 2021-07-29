@@ -1,0 +1,38 @@
+<form th:method="POST" th:action="@{/admin}" th:object="${user}" class="text-center">
+    <div class="form-group">
+        <label for="firstName">Enter firstName: </label>
+        <input class="form-control" type="text" th:field="*{firstName}" id="firstName"/>
+        <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">FirstName Error</div>
+    </div>
+    <div class="form-group">
+        <label for="lastName">Enter lastName: </label>
+        <input class="form-control" type="text" th:field="*{lastName}" id="lastName"/>
+        <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName Error</div>
+    </div>
+    <div class="form-group text-center">
+        <label for="age">Age: </label>
+        <input class="form-control" type="text" th:field="*{age}" id="age"/>
+        <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</div>
+    </div>
+    <div class="form-group">
+        <label for="email">Enter email: </label>
+        <input class="form-control" type="text" th:field="*{email}" id="email"/>
+        <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+    </div>
+    <div class="form-group">
+        <label for="password">Enter password: </label>
+        <input class="form-control" type="text" th:field="*{password}" id="password"/>
+        <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+    </div>
+    <div class="form-group text-center">
+        <label for="role" id="role">Role: </label>
+        <select name="roles" class="custom-select" size="3">
+            <!--                selected-->
+            <option th:each="role: ${roles}"
+                    th:attr="value=${role.getId()}"
+                    th:text="${role.getName()}">Value</option>
+        </select>
+        <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{role}">Role Error</div>
+    </div>
+    <input type="submit" class="btn btn-success" value="Add new user"/>
+</form>

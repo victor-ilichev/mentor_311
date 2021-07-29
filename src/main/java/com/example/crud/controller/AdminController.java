@@ -4,6 +4,8 @@ import com.example.crud.model.User;
 import com.example.crud.service.RoleRepository;
 import com.example.crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -40,11 +42,11 @@ public class AdminController {
 
     @GetMapping("/index")
     public String index(Model model) {
-        User user = new User();
-
-        model.addAttribute("users", userService.findAll());
-        model.addAttribute("new_user", user);
-        model.addAttribute("roles", roleRepository.findAll());
+//        User user = new User();
+//
+//        model.addAttribute("users", userService.findAll());
+//        model.addAttribute("new_user", user);
+//        model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("currentPage", "admin_index");
 
         return "admin/index";
@@ -76,14 +78,17 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") @Valid User user,
+    public ResponseEntity<User> create(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "admin/new";
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
+
+            return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
+        }
 
         userService.save(user);
 
-        return "redirect:/admin/index";
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/edit")
@@ -107,27 +112,31 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user,
+    public ResponseEntity<User> update(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult,
                          @PathVariable("id") long id) {
 
         if (null == user) {
-            return "redirect:/admin/" + id + "/not-exists";
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }
 
         if (bindingResult.hasErrors()) {
-            return "admin/edit";
+            return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
         }
 
         userService.save(user);
 
-        return "redirect:/admin/index";
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@ModelAttribute("user") User user) {
+    public ResponseEntity<User> delete(@ModelAttribute("user") User user) {
+        if (null == user) {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
+
         userService.delete(user);
 
-        return "redirect:/admin/index";
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 }
